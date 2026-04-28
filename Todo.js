@@ -2,221 +2,199 @@
   =============================================
   PROJECT: My To Do List App - JavaScript
   AUTHOR: dhruba2601
+  DATE: 2026
+  GITHUB: https://github.com/dhruba2601
   =============================================
   WHAT THIS FILE DOES:
   JavaScript is the BRAIN of our To Do app.
   HTML gives structure. CSS gives looks.
   JavaScript gives BEHAVIOUR.
 
-  WHAT HAPPENS WHEN USER CLICKS ADD:
-  1. Read what user typed in the input box
-  2. Check if input is empty — show alert if so
-  3. Create a new task row (<li>)
-  4. Inside the row: add checkbox, task text, delete button
-  5. Checkbox click → strikethrough the text
-  6. Delete click → remove the task from list
-  7. Add the task row to the list on screen
-  8. Clear the input box for next task
+  HOW IT WORKS:
+  1. Page loads → loadTasks() reads saved tasks from
+     browser storage and displays them on screen
+  2. User types task → clicks Add → addTask() runs
+  3. addTask() saves to storage + shows on screen
+  4. Delete button → removes from screen + storage
+  5. Checkbox → strikethrough text when checked
+
+  KEY IMPROVEMENT IN THIS VERSION:
+  One function createTaskElement() builds the task row.
+  Both addTask() and loadTasks() use this same function.
+  No duplicate code — change one place, affects everywhere.
   =============================================
 */
 
 
 /* =============================================
-   STEP 1: FIND HTML ELEMENTS
-   Before JavaScript can do anything,
-   it needs to find the elements on the page.
+   STEP 1: LOAD SAVED TASKS FROM BROWSER STORAGE
+   localStorage stores data permanently in browser.
+   Even after closing and reopening — data is there.
 
-   getElementById() finds ONE element by its ID.
-   ID is set in HTML like: id="taskInput"
+   JSON.parse() converts saved text back to array.
+   || [] means: if nothing saved yet, use empty array.
    ============================================= */
-
-const taskInput = document.getElementById('taskInput');
-// taskInput = the text input box where user types
-
-const addBtn = document.getElementById('addBtn');
-// addBtn = the blue Add button
-
-const taskList = document.getElementById('taskList');
-// taskList = the empty <ul> where tasks will appear
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 
 /* =============================================
-   STEP 2: LISTEN FOR ADD BUTTON CLICK
-   addEventListener waits silently until
-   the Add button is clicked.
-   When clicked — runs the function inside.
+   STEP 2: FIND HTML ELEMENTS
+   getElementById() finds elements by their ID.
+   IDs are set in HTML like: id="taskInput"
    ============================================= */
-
-addBtn.addEventListener('click', function() {
-
-
-    /* =============================================
-       STEP 3: READ WHAT USER TYPED
-       .value reads the current text in the input box
-       Example: user typed "Buy milk" → taskText = "Buy milk"
-       ============================================= */
-    const taskText = taskInput.value;
+const taskInput = document.getElementById('taskInput');  // Text input box
+const addBtn    = document.getElementById('addBtn');     // Blue Add button
+const taskList  = document.getElementById('taskList');   // Empty <ul> list
 
 
-    /* =============================================
-       STEP 4: CHECK IF INPUT IS EMPTY
-       If user clicks Add without typing anything,
-       show an alert and stop — don't add empty task.
-       return = exit the function immediately
-       ============================================= */
-    if (taskText === '') {
-        alert('Please enter a task');
-        return; /* Stop here — don't run the rest of the code */
-    }
+/* =============================================
+   STEP 3: createTaskElement() - CORE FUNCTION
+   This function builds ONE complete task row.
+   It takes taskText (e.g. "Buy milk") as input
+   and returns a fully built <li> element.
 
+   WHY ONE FUNCTION?
+   Both adding new tasks AND loading saved tasks
+   need the same task row structure.
+   Instead of writing the same code twice,
+   we write it once here and call it from both places.
+   ============================================= */
+function createTaskElement(taskText) {
 
-    /* =============================================
-       STEP 5: CREATE THE TASK ROW (<li>)
-       document.createElement() creates a new
-       HTML element in memory (not on screen yet).
-       We build it piece by piece, then add to page.
-       ============================================= */
+    // Create the task row
     const li = document.createElement('li');
-    /* li is now an empty <li></li> in memory */
 
-
-    /* =============================================
-       STEP 6: CREATE THE CHECKBOX
-       type = 'checkbox' makes it a tick box.
-       When user checks it — task gets strikethrough.
-       ============================================= */
+    // Create checkbox
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    /* checkbox is now <input type="checkbox"> */
 
-
-    /* =============================================
-       STEP 7: CREATE THE TASK TEXT
-       <span> is an inline element to hold text.
-       .textContent sets the text inside the span.
-       Example: span shows "Buy milk"
-       ============================================= */
+    // Create task text label
     const span = document.createElement('span');
     span.textContent = taskText;
-    /* span is now <span>Buy milk</span> */
 
-
-    /* =============================================
-       STEP 8: CHECKBOX CLICK — STRIKETHROUGH
-       When checkbox state changes (checked/unchecked),
-       this function runs.
-
-       If checked → strikethrough + grey text (task done)
-       If unchecked → remove strikethrough (task active)
-
-       style.textDecoration = CSS text-decoration property
-       style.color = CSS color property
-       ============================================= */
+    // Checkbox change: strikethrough when checked
+    // 'change' fires when checkbox is checked/unchecked
     checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
-            /* Task marked as done */
-            span.style.textDecoration = 'line-through'; /* Strike through text */
-            span.style.color = '#aaa';                  /* Fade text to grey */
+            span.style.textDecoration = 'line-through'; // Strike text
+            span.style.color = '#aaa';                  // Grey color
         } else {
-            /* Task marked as not done */
-            span.style.textDecoration = 'none';         /* Remove strikethrough */
-            span.style.color = '#333';                  /* Restore dark text */
+            span.style.textDecoration = 'none';         // Remove strike
+            span.style.color = '#333';                  // Dark color
         }
     });
 
-
-    /* =============================================
-       STEP 9: CREATE THE DELETE BUTTON
-       Red button on the right of each task.
-       classList.add() adds the CSS class "delete-btn"
-       which gives it the red color from CSS.
-       ============================================= */
+    // Create delete button
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Delete';
-    deleteBtn.classList.add('delete-btn');
-    /* deleteBtn is now <button class="delete-btn">Delete</button> */
+    deleteBtn.classList.add('delete-btn'); // Adds red color from CSS
 
-
-    /* =============================================
-       STEP 10: DELETE BUTTON CLICK — REMOVE TASK
-       When Delete is clicked — remove the entire
-       task row (<li>) from the page.
-       li.remove() deletes it completely from DOM.
-       ============================================= */
+    // Delete button click: remove task from screen and storage
     deleteBtn.addEventListener('click', function() {
-        li.remove(); /* Removes this entire task row */
+        li.remove(); // Remove from screen
+
+        // filter() keeps all tasks EXCEPT the deleted one
+        tasks = tasks.filter(function(t) {
+            return t !== taskText;
+        });
+
+        // Save updated list to browser storage
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     });
 
-
-    /* =============================================
-       STEP 11: GROUP CHECKBOX AND TEXT TOGETHER
-       We wrap checkbox and span inside a <div>
-       so they stay together on the LEFT side.
-       The delete button stays on the RIGHT side.
-
-       Result:
-       [ ☐  Buy milk ]              [ Delete ]
-         ↑ leftGroup                    ↑ deleteBtn
-       ============================================= */
+    // Group checkbox and text together on LEFT side
+    // Delete button stays on RIGHT side
+    // Result: [ checkbox  task text ]        [ Delete ]
     const leftGroup = document.createElement('div');
-    leftGroup.style.display = 'flex';       /* Side by side */
-    leftGroup.style.alignItems = 'center';  /* Vertically centered */
-    leftGroup.style.gap = '10px';           /* Space between checkbox and text */
+    leftGroup.style.display    = 'flex';
+    leftGroup.style.alignItems = 'center';
+    leftGroup.style.gap        = '10px';
 
-    leftGroup.appendChild(checkbox); /* Add checkbox to left group */
-    leftGroup.appendChild(span);     /* Add text to left group */
+    leftGroup.appendChild(checkbox); // Checkbox on left
+    leftGroup.appendChild(span);     // Text next to checkbox
 
+    // Assemble complete task row
+    li.appendChild(leftGroup);  // Left side: checkbox + text
+    li.appendChild(deleteBtn);  // Right side: delete button
 
-    /* =============================================
-       STEP 12: ASSEMBLE THE TASK ROW
-       Now put everything together inside the <li>:
-       - leftGroup (checkbox + text) on the left
-       - deleteBtn on the right
-       ============================================= */
-    li.appendChild(leftGroup);  /* Add left group to task row */
-    li.appendChild(deleteBtn);  /* Add delete button to task row */
+    // Return the finished <li> element to the caller
+    return li;
+}
 
 
-    /* =============================================
-       STEP 13: ADD TASK TO THE LIST ON SCREEN
-       taskList is our <ul> element.
-       appendChild() adds the new <li> inside it.
-       Now the task appears on the screen!
-       ============================================= */
+/* =============================================
+   STEP 4: addTask() - ADD A NEW TASK
+   Runs when user clicks the Add button.
+   ============================================= */
+function addTask() {
+    const taskText = taskInput.value.trim();
+    // .trim() removes accidental spaces from start/end
+
+    // Stop if input is empty
+    if (taskText === '') {
+        alert('Please enter a task');
+        return; // Exit — don't add empty task
+    }
+
+    // Build task row using our core function
+    const li = createTaskElement(taskText);
+
+    // Show task on screen
     taskList.appendChild(li);
 
+    // Add to tasks array and save to browser storage
+    tasks.push(taskText);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    // JSON.stringify converts array to text for storage
+    // Example: ["Buy milk", "Go gym"] becomes '["Buy milk","Go gym"]'
 
-    /* =============================================
-       STEP 14: CLEAR THE INPUT BOX
-       Reset input to empty so user can type next task.
-       Setting .value = '' clears the text box.
-       ============================================= */
+    // Clear input box for next task
     taskInput.value = '';
+}
 
-}); /* end addBtn click listener */
+
+/* =============================================
+   STEP 5: loadTasks() - LOAD SAVED TASKS ON STARTUP
+   Runs automatically when page opens.
+   Reads saved tasks from localStorage and
+   displays them using createTaskElement().
+   ============================================= */
+function loadTasks() {
+    tasks.forEach(function(taskText) {
+        const li = createTaskElement(taskText); // Build task row
+        taskList.appendChild(li);               // Show on screen
+    });
+}
+
+
+/* =============================================
+   STEP 6: CONNECT BUTTON AND LOAD ON START
+   ============================================= */
+addBtn.addEventListener('click', addTask); // Button click runs addTask()
+loadTasks(); // Load saved tasks when page opens
 
 
 /*
   =============================================
   FULL FLOW SUMMARY:
 
-  User types "Buy milk" → clicks Add
-  ↓
-  JavaScript reads "Buy milk" from input
-  ↓
-  Creates: <li>
-             <div> ← leftGroup
-               <input type="checkbox">
-               <span>Buy milk</span>
-             </div>
-             <button class="delete-btn">Delete</button>
-           </li>
-  ↓
-  Adds the <li> to <ul id="taskList">
-  ↓
-  Clears the input box
+  PAGE OPENS:
+  localStorage → tasks array → loadTasks()
+  → createTaskElement() for each saved task
+  → tasks appear on screen
 
-  User checks checkbox → text gets strikethrough
-  User clicks Delete → task disappears
+  USER ADDS TASK:
+  Types "Buy milk" → clicks Add → addTask()
+  → createTaskElement("Buy milk")
+  → task appears on screen + saved to localStorage
+
+  USER DELETES TASK:
+  Clicks Delete → li.remove()
+  → filter() removes from array
+  → localStorage updated
+
+  USER COMPLETES TASK:
+  Clicks checkbox → strikethrough appears
+  Clicks again → strikethrough removed
   =============================================
 */
