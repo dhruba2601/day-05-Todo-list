@@ -1,0 +1,194 @@
+/*
+  =============================================
+  PROJECT: My To Do List App - Styles
+  AUTHOR: dhruba2601
+  =============================================
+  WHAT THIS FILE DOES:
+  CSS controls how everything looks.
+  Without CSS — plain black text on white page.
+  With CSS — clean card layout, colored buttons,
+  rounded corners, professional appearance.
+
+  HOW CSS WORKS:
+  selector { property: value; }
+  * = everything on the page
+  .className = elements with that class
+  #idName = element with that specific ID
+  =============================================
+*/
+
+
+/* =============================================
+   RESET — REMOVE DEFAULT BROWSER STYLES
+   Every browser adds its own default spacing.
+   This removes all of that so we start fresh.
+
+   * = applies to EVERY element on the page
+   margin: 0 = remove all outer spacing
+   padding: 0 = remove all inner spacing
+   box-sizing: border-box = padding stays
+   inside the element width (more predictable)
+   ============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =============================================
+   BODY — FULL PAGE BACKGROUND
+   Sets the grey background and centers
+   the white container card on the page.
+
+   justify-content: center = center horizontally
+   padding: 50px 20px = space from top and sides
+   ============================================= */
+body {
+    font-family: Arial, sans-serif;  /* Clean readable font */
+    background: #f0f2f5;             /* Light grey page background */
+    display: flex;                   /* Activates flexbox */
+    justify-content: center;         /* Center the container horizontally */
+    padding: 50px 20px;              /* 50px from top, 20px from sides */
+}
+
+
+/* =============================================
+   CONTAINER — WHITE CARD
+   The main white box that holds everything.
+   Centered on the grey background.
+   ============================================= */
+.container {
+    background: white;                          /* White card */
+    border-radius: 10px;                        /* Rounded corners */
+    padding: 30px;                              /* Space inside the card */
+    width: 550px;                               /* Fixed width */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);    /* Soft shadow below card
+                                                   Makes it look elevated */
+}
+
+
+/* =============================================
+   PAGE TITLE (h1)
+   "My To Do List" heading at the top.
+   ============================================= */
+h1 {
+    text-align: center;     /* Center the title */
+    margin-bottom: 25px;    /* Space below title before input area */
+    color: #333;            /* Dark grey text */
+}
+
+
+/* =============================================
+   INPUT AREA
+   Wraps the text input and Add button
+   side by side using flexbox.
+   ============================================= */
+.input-area {
+    display: flex;          /* Place input and button side by side */
+    gap: 10px;              /* Space between input and button */
+    margin-bottom: 20px;    /* Space below before task list starts */
+}
+
+
+/* =============================================
+   TEXT INPUT
+   Where user types their task.
+
+   flex: 1 = takes all available space,
+   leaving just enough room for the Add button.
+   ============================================= */
+input {
+    flex: 1;                        /* Stretch to fill available width */
+    padding: 10px 15px;             /* Space inside input */
+    border: 1px solid #ddd;         /* Light grey border */
+    border-radius: 8px;             /* Slightly rounded corners */
+    font-size: 16px;                /* Readable text size */
+    outline: none;                  /* Remove blue glow on click */
+}
+
+
+/* =============================================
+   ALL BUTTONS — Default Style
+   Applies to both the Add button and
+   the Delete buttons on each task.
+   ============================================= */
+button {
+    padding: 10px 20px;     /* Space inside button */
+    background: #4285F4;    /* Google Blue — default button color */
+    color: white;           /* White text */
+    border: none;           /* Remove default border */
+    border-radius: 8px;     /* Rounded corners */
+    font-size: 16px;        /* Readable text size */
+    cursor: pointer;        /* Hand cursor on hover */
+}
+
+
+/* =============================================
+   TASK LIST (ul)
+   The unordered list that holds all tasks.
+   list-style: none removes the default bullet points.
+   ============================================= */
+ul {
+    list-style: none; /* Remove default bullet points */
+}
+
+
+/* =============================================
+   EACH TASK ITEM (li)
+   Each task row added by JavaScript.
+   Contains: checkbox | task text | delete button
+
+   justify-content: space-between = pushes
+   left group and delete button to opposite ends.
+   ============================================= */
+li {
+    display: flex;                  /* Place items in a row */
+    justify-content: space-between; /* Checkbox+text left, Delete right */
+    align-items: center;            /* Vertically center all items */
+    padding: 12px 15px;             /* Space inside each task row */
+    margin-bottom: 10px;            /* Space between tasks */
+    background: #f8f9fa;            /* Light grey task background */
+    border-radius: 8px;             /* Rounded corners */
+    font-size: 16px;                /* Readable text */
+    cursor: pointer;                /* Hand cursor */
+    gap: 10px;                      /* Space between elements inside */
+}
+
+
+/* =============================================
+   COMPLETED TASK
+   Applied when checkbox is checked.
+   Strikes through the text and fades the color.
+   ============================================= */
+li.done {
+    text-decoration: line-through;  /* Strike through text */
+    color: #aaa;                    /* Faded grey text */
+    background: #e8e8e8;            /* Slightly darker background */
+}
+
+
+/* =============================================
+   DELETE BUTTON
+   Red button on the right of each task.
+   Overrides the default blue button color.
+   ============================================= */
+.delete-btn {
+    background: #EA4335;    /* Google Red */
+    padding: 5px 10px;      /* Smaller padding than Add button */
+    font-size: 12px;        /* Smaller text */
+    border-radius: 5px;     /* Rounded corners */
+}
+
+
+/* =============================================
+   TASK TEXT (span)
+   The text label inside each task.
+   text-align: left keeps text on the left side.
+   word-break: break-word prevents very long
+   words from overflowing outside the box.
+   ============================================= */
+li span {
+    word-break: break-word; /* Long words wrap to next line */
+    text-align: left;       /* Text stays on the left */
+}

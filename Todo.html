@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+  =============================================
+  PROJECT: My To Do List App
+  AUTHOR: dhruba2601
+  DATE: 2026
+  GITHUB: https://github.com/dhruba2601
+  =============================================
+  WHAT THIS FILE DOES:
+  This is the HTML file — the skeleton of our app.
+  It creates the structure you see on the page:
+  - A title at the top
+  - An input box to type tasks
+  - An Add button
+  - An empty list where tasks will appear
+
+  JavaScript will dynamically add tasks to the
+  empty list when the user clicks Add.
+  =============================================
+-->
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"> <!-- Supports all standard characters -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Works on mobile screens -->
+    <title>To Do List</title> <!-- Shows on browser tab -->
+
+    <!--
+      Linking our CSS file.
+      CSS makes everything look good —
+      colors, fonts, spacing, layout.
+    -->
+    <link rel="stylesheet" href="Todo.css">
+</head>
+
+<body>
+
+    <!--
+      MAIN CONTAINER
+      A white box that holds everything.
+      CSS centers this box on the page.
+    -->
+    <div class="container">
+
+        <!-- PAGE TITLE -->
+        <h1>My To Do List</h1>
+
+        <!--
+          INPUT AREA
+          Contains two things side by side:
+          1. Text input — where user types the task
+          2. Add button — adds the task to the list
+
+          CSS Flexbox puts them side by side automatically.
+        -->
+        <div class="input-area">
+
+            <!--
+              TASK INPUT BOX
+              id="taskInput" — JavaScript uses this ID
+              to read what the user typed.
+              placeholder — grey hint text shown when empty.
+            -->
+            <input type="text" id="taskInput" placeholder="Enter a task...">
+
+            <!--
+              ADD BUTTON
+              id="addBtn" — JavaScript listens for
+              clicks on this button.
+              When clicked — a new task is created.
+            -->
+            <button id="addBtn">Add</button>
+
+        </div><!-- end .input-area -->
+
+        <!--
+          TASK LIST
+          This is an empty unordered list (<ul>).
+          It starts empty — no tasks yet.
+          JavaScript will create <li> items and
+          add them here every time user clicks Add.
+
+          id="taskList" — JavaScript finds this
+          element to add new tasks inside it.
+        -->
+        <ul id="taskList">
+            <!-- Tasks appear here automatically via JavaScript -->
+        </ul>
+
+    </div><!-- end .container -->
+
+    <!--
+      JAVASCRIPT FILE LINK
+      Always at the BOTTOM of body — not in <head>.
+      Why? HTML loads top to bottom.
+      JS must load AFTER all HTML elements exist,
+      otherwise it cannot find the input and buttons.
+    -->
+    <script src="Todo.js"></script>
+
+</body>
+</html>
